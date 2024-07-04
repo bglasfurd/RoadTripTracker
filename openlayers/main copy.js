@@ -4,9 +4,6 @@ window.onload = init;
 
 
 function init() {
-
-    const mysql = require('mysql');
-
   map = new OpenLayers.Map("js-map");
   var mapnik         = new OpenLayers.Layer.OSM();
   var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
@@ -20,9 +17,8 @@ function init() {
   var markers = new OpenLayers.Layer.Markers( "Markers" );
   map.addLayer(markers);
   
-  const long = [77.5946,109.6690977];
-  const lat = [12.9716,-7.4029428]; 
-  
+  const long = [77.5946,80.2705];
+  const lat = [12.9716,13.0843];  
   for(let i=0; i<2; i++){
     var lonLat = new OpenLayers.LonLat(long[i],lat[i]).transform(fromProjection, toProjection); 
 

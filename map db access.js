@@ -1,14 +1,6 @@
+window.onload = init;
 
-
-// window.onload = init;
-
-
-
-
-// function init() {
 const mysql = require('mysql');
-
-
 var lon = [];
 var index = 0;
 var lat = [];
@@ -39,7 +31,7 @@ con.connect(function (error) {
     console.log("Connected");
 
 //GETTING LONGITUDE FROM DB
-    let sql = "select lon from coordinates where username = 'brad'";
+    const sql = "select lon from coordinates where username = 'brad'";
     con.query(sql, function (err, result, field) {
       if (!err) {
         // console.log(JSON.parse(result));
@@ -48,6 +40,7 @@ con.connect(function (error) {
             // console.log(result[i]);
             let ob1 = Object.values(JSON.parse(JSON.stringify(result[i])));
             let ob = ob1.toString()
+            console.log(typeof ob);
             setLon(ob);
           } catch (error) {
             console.log(error.message);
@@ -55,40 +48,51 @@ con.connect(function (error) {
 
         }
       } else {
-        console.log("Error while selecting record from coordinates table. ");
-      }});
-  // GETTING LATITUDE COORDINATES FROM DB
-
-      sql = "select lat from coordinates where username = 'brad'";
-      con.query(sql, function (err, result, field) {
-        if (!err) {
-          // console.log(JSON.parse(result));
-          for (let i = 0; i < result.length; i++) {
-            try {
-              // console.log(result[i]);
-              let ob1 = Object.values(JSON.parse(JSON.stringify(result[i])));
-              let ob = ob1.toString()
-              setLat(ob);
-            } catch (error) {
-              console.log(error.message);
-            }
-
-          }
-        } else {
-          console.log("Error while selecting record from coordinates table. ");
-        }
-
-
-      for(let i=0; i<lon.length; i++){
-        console.log(lon[i] + "\t" +lat[i]);
+        console.log("Error while selecting record from campground table. ");
       }
+
+      // lon.forEach(function (value) {
+      //   console.log("lon array");
+      //   console.log(value);
+      // });
     });
-  }})
 
 
+// GETTING LATITUDE FROM DB
+   sql = "select lat from coordinates where username = 'brad'";
+    con.query(sql, function (err, result, field) {
+      if (!err) {
+        // console.log(JSON.parse(result));
+        for (let i = 0; i < result.length; i++) {
+          try {
+            // console.log(result[i]);
+            let ob1 = Object.values(JSON.parse(JSON.stringify(result[i])));
+            let ob = ob1.toString()
+            console.log(typeof ob);
+            setLat(ob);
+          } catch (error) {
+            console.log(error.message);
+          }
+
+        }
+      } else {
+        console.log("Error while selecting record from campground table. ");
+      }
+
+      // lon.forEach(function (value) {
+      //   console.log("lon array");
+      //   console.log(value);
+      // });
+    });
 
 
+  } else {
 
+    console.log("Error DataBase Not Connected!!! select statement");
+  }
+});
+
+function init() {
   map = new OpenLayers.Map("js-map");
   var mapnik         = new OpenLayers.Layer.OSM();
   var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
@@ -101,9 +105,15 @@ con.connect(function (error) {
 
   var markers = new OpenLayers.Layer.Markers( "Markers" );
   map.addLayer(markers);
+
+  // lon.forEach(function (value) {
+      //   console.log("lon array");
+      //   console.log(value);
+      // });
   
-  for(let i=0; i<lat.length; i++){
-    var lonLat = new OpenLayers.LonLat(lon[i],lat[i]).transform(fromProjection, toProjection); 
+  
+  lon.forEach(function(value){
+    var lonLat = new OpenLayers.LonLat(lon[indexf],lat[indexf]).transform(fromProjection, toProjection); 
 
 
     var size = new OpenLayers.Size(20,30);
@@ -111,7 +121,8 @@ con.connect(function (error) {
     var icon = new OpenLayers.Icon('pinpoint.png', size, offset);
     var marker = new OpenLayers.Marker(lonLat,icon);
     markers.addMarker(marker);
-  }
+    indexf++;
+  });
 
   marker.events.register("click", marker, function(e){
     popup = new OpenLayers.Popup.FramedCloud("",
@@ -123,4 +134,4 @@ con.connect(function (error) {
     map.addPopup(popup);
   }); 
 
-// }
+}
