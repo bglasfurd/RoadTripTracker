@@ -4,6 +4,9 @@ window.onload = init;
 
 
 function init() {
+  const mysql = require('mysql');
+
+
   map = new OpenLayers.Map("js-map");
   var mapnik         = new OpenLayers.Layer.OSM();
   var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984

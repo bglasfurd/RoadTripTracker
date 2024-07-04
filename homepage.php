@@ -45,7 +45,7 @@
             color: white;
         }
     </style>
-    <script src="./map.js"></script>
+    <script src="./map_copy.js"></script>
 
 </head>
 <body>
