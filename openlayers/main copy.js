@@ -1,10 +1,8 @@
 window.onload = init;
 
 
-
-
 function init() {
-  map = new OpenLayers.Map("js-map");
+  var map = new OpenLayers.Map("js-map");
   var mapnik         = new OpenLayers.Layer.OSM();
   var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
   var toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection

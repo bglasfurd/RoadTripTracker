@@ -110,5 +110,6 @@ con.connect(function (error) {
       for(let i=0; i<lon.length; i++){
         console.log(lon[i] + "\t" +lat[i]);
       }
+      
     });
   }})

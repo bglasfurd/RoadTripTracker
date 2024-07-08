@@ -12,7 +12,19 @@
 
     $name = $user_data['name'];
 
+    $query = "select lon from coordinates where username = '$username'";
+    $result = mysqli_query($conn,$query);
 
+	while($row = mysqli_fetch_array($result)) {
+		$lon[] = $row['lon'];
+	}
+
+	$query = "select lat from coordinates where username = '$username'";
+    $result = mysqli_query($conn,$query);
+
+	while($row = mysqli_fetch_array($result)) {
+		$lat[] = $row['lat'];
+	}
     
 ?>
 
@@ -32,9 +44,9 @@
             position: absolute;
             top: 0px;
             right: 0px;
-            height: 100vh;
+            height: 96.1vh;
             width: 60vw;
-            border: 14.39px outset black;
+            border: 14.30px outset black;
         }
         .inputbox{
             width:350px;
@@ -44,8 +56,23 @@
             transform: translate(-50%,-50%);
             color: white;
         }
+        .edit-location-btn{
+            width: 100%;
+            position: absolute;
+            top: 110%;
+            left: 0%;
+            background: none;
+            border: 2px solid;
+            color: white;
+            padding: 7px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .edit-location-btn:hover{
+            opacity: 60%;
+            transition: 200ms;
+        }
     </style>
-    <script src="./map_copy.js"></script>
 
 </head>
 <body>
@@ -60,11 +87,62 @@
             </div> -->
 
             <button class="btn" onclick="findCoordinates()">Input</button>
+
+            <!-- <button class="btn" onclick="edit-locations.php">Edit</button> -->
+            <a href="edit-locations.php">
+                <button class="edit-location-btn" >Edit Locations</button>
+            </a>
+
+
         </div>
 
     <div id="js-map" class="map"></div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/openlayers/2.11/OpenLayers.js"></script>
+    <script src="./openlayers/libs/v9.2.3-package/dist/ol.js"></script>
+
+    <script>
+        map = new OpenLayers.Map("js-map");
+        var mapnik         = new OpenLayers.Layer.OSM();
+        var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
+        var toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
+        var position       = new OpenLayers.LonLat(77.5946,12.9716).transform(fromProjection, toProjection);
+        var zoom           = 6; 
+
+        map.addLayer(mapnik);
+        map.setCenter(position, zoom ); 
+
+        var markers = new OpenLayers.Layer.Markers( "Markers" );
+        map.addLayer(markers);
+
+        var lon = <?php echo json_encode($lon); ?>;
+        var lat = <?php echo json_encode($lat); ?>;
+ 
+        
+        for(let i=0; i<lon.length; i++){
+            var lonLat = new OpenLayers.LonLat(lon[i],lat[i]).transform(fromProjection, toProjection); 
+
+
+            var size = new OpenLayers.Size(15,23);
+            var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+            var icon = new OpenLayers.Icon('pinpoint.png', size, offset);
+            var marker = new OpenLayers.Marker(lonLat,icon);
+            markers.addMarker(marker);
+
+            marker.events.register("click", marker, function(e){
+            popup = new OpenLayers.Popup.FramedCloud("",
+                                    marker.lonlat,
+                                    new OpenLayers.Size(200, 200),
+                                    "here lies your information",
+                                    null, true);
+
+            map.addPopup(popup);
+        }); 
+    }
+
+    </script>
 
     <script type = "text/javascript">   
         var address = document.querySelector("#address");
@@ -108,7 +186,7 @@
         }
 
         function findCoordinates() {
-            var url = "https://nominatim.openstreetmap.org/search?format=json&limit=3&q=" + address.value + " India";
+            var url = "https://nominatim.openstreetmap.org/search?format=json&limit=3&q=" + address.value + ",India";
             fetch(url)
                   .then(response => response.json())
                   .then(data => addressArr = data)
@@ -118,9 +196,7 @@
         }
         
     </script>
-
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/openlayers/2.11/OpenLayers.js"></script>
-    <script src="./openlayers/libs/v9.2.3-package/dist/ol.js"></script>
+    
 </body>
 </html>
 

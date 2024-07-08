@@ -1,4 +1,3 @@
-window.onload = init;
 
 const mysql = require('mysql');
 var lon = [];

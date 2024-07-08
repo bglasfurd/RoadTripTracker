@@ -1,95 +1,19 @@
 
 
-// window.onload = init;
+import {lon} from './main_db.js';
+import {lat} from './main_db.js';
+
+window.onload = test;
 
 
 
+function test(){
 
-// function init() {
-const mysql = require('mysql');
-
-
-var lon = [];
-var index = 0;
-var lat = [];
-var index1 = 0;
-var indexf = 0;
-
-
-
-// First you need to create a connection to the database
-  const con = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'biking'
-});
-
-function setLon(value) {
-  lon[index++]=value;
+    init();
 }
 
-function setLat(value) {
-  lat[index1++]=value;
-}
-
-con.connect(function (error) {
-
-  if (!error) {
-    console.log("Connected");
-
-//GETTING LONGITUDE FROM DB
-    let sql = "select lon from coordinates where username = 'brad'";
-    con.query(sql, function (err, result, field) {
-      if (!err) {
-        // console.log(JSON.parse(result));
-        for (let i = 0; i < result.length; i++) {
-          try {
-            // console.log(result[i]);
-            let ob1 = Object.values(JSON.parse(JSON.stringify(result[i])));
-            let ob = ob1.toString()
-            setLon(ob);
-          } catch (error) {
-            console.log(error.message);
-          }
-
-        }
-      } else {
-        console.log("Error while selecting record from coordinates table. ");
-      }});
-  // GETTING LATITUDE COORDINATES FROM DB
-
-      sql = "select lat from coordinates where username = 'brad'";
-      con.query(sql, function (err, result, field) {
-        if (!err) {
-          // console.log(JSON.parse(result));
-          for (let i = 0; i < result.length; i++) {
-            try {
-              // console.log(result[i]);
-              let ob1 = Object.values(JSON.parse(JSON.stringify(result[i])));
-              let ob = ob1.toString()
-              setLat(ob);
-            } catch (error) {
-              console.log(error.message);
-            }
-
-          }
-        } else {
-          console.log("Error while selecting record from coordinates table. ");
-        }
-
-
-      for(let i=0; i<lon.length; i++){
-        console.log(lon[i] + "\t" +lat[i]);
-      }
-    });
-  }})
-
-
-
-
-
-  map = new OpenLayers.Map("js-map");
+function init() {
+  var map = new OpenLayers.Map("js-map");
   var mapnik         = new OpenLayers.Layer.OSM();
   var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
   var toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
@@ -102,7 +26,7 @@ con.connect(function (error) {
   var markers = new OpenLayers.Layer.Markers( "Markers" );
   map.addLayer(markers);
   
-  for(let i=0; i<lat.length; i++){
+  for(let i=0; i<lon.length; i++){
     var lonLat = new OpenLayers.LonLat(lon[i],lat[i]).transform(fromProjection, toProjection); 
 
 
@@ -123,4 +47,4 @@ con.connect(function (error) {
     map.addPopup(popup);
   }); 
 
-// }
+}

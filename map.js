@@ -1,11 +1,9 @@
 window.onload = init;
 
 
-
-
 function init() {
 
-    const mysql = require('mysql');
+
 
   map = new OpenLayers.Map("js-map");
   var mapnik         = new OpenLayers.Layer.OSM();
@@ -20,11 +18,11 @@ function init() {
   var markers = new OpenLayers.Layer.Markers( "Markers" );
   map.addLayer(markers);
   
-  const long = [77.5946,109.6690977];
-  const lat = [12.9716,-7.4029428]; 
+  var lon = [77.5946,80.2705,76,75];
+  var lat = [12.9716,13.0843,18,14]; 
   
-  for(let i=0; i<2; i++){
-    var lonLat = new OpenLayers.LonLat(long[i],lat[i]).transform(fromProjection, toProjection); 
+  for(let i=0; i<lon.length; i++){
+    var lonLat = new OpenLayers.LonLat(lon[i],lat[i]).transform(fromProjection, toProjection); 
 
 
     var size = new OpenLayers.Size(20,30);

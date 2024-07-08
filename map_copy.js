@@ -4,8 +4,6 @@ window.onload = init;
 
 
 function init() {
-  const mysql = require('mysql');
-
 
   map = new OpenLayers.Map("js-map");
   var mapnik         = new OpenLayers.Layer.OSM();
