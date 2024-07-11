@@ -75,6 +75,7 @@
     </style>
 
 </head>
+<div id="js-map" class="map"></div>
 <body>
         <div class="inputbox">
             <h1><?php echo "$name" ?>'s Trip details</h1>
@@ -95,8 +96,6 @@
 
 
         </div>
-
-    <div id="js-map" class="map"></div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
